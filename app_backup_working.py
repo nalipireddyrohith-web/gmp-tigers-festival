@@ -1,0 +1,650 @@
+from flask import Flask, render_template, request, redirect, url_for
+import sqlite3
+import os
+
+app = Flask(__name__)
+
+DATABASE = "festival.db"
+
+UPLOAD_FOLDER = "static/uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+
+def get_db():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+# ---------------- HOME ----------------
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
+@app.route("/aim")
+def aim():
+    return render_template("aim.html")
+
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+
+@app.route("/gallery")
+def gallery():
+    return render_template("gallery.html")
+
+
+@app.route("/events")
+def events():
+    conn = get_db()
+    data = conn.execute(
+        "SELECT * FROM events ORDER BY id DESC"
+    ).fetchall()
+    conn.close()
+    return render_template("events.html", events=data)
+
+
+@app.route("/committee")
+def committee():
+    conn = get_db()
+    data = conn.execute(
+        "SELECT * FROM committee ORDER BY id DESC"
+    ).fetchall()
+    conn.close()
+    return render_template("committee.html", members=data)
+
+
+# ---------------- ADMIN LOGIN ----------------
+
+@app.route("/admin")
+def admin():
+    return render_template("login.html")
+
+
+@app.route("/login", methods=["POST"])
+def login():
+
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    if username == "admin" and password == "gmp123":
+        return redirect(url_for("dashboard"))
+
+    return "<h2>Invalid Username or Password</h2>"
+
+
+# ---------------- EVENTS MANAGEMENT ----------------
+
+@app.route("/manage_events")
+def manage_events():
+    conn = get_db()
+    events = conn.execute(
+        "SELECT * FROM events ORDER BY id DESC"
+    ).fetchall()
+    conn.close()
+    return render_template("manage_events.html", events=events)
+
+
+@app.route("/add_event", methods=["GET", "POST"])
+def add_event():
+
+    if request.method == "POST":
+        event = request.form["event"]
+        date = request.form["date"]
+        time = request.form["time"]
+
+        conn = get_db()
+        conn.execute(
+            "INSERT INTO events(event,date,time) VALUES(?,?,?)",
+            (event, date, time),
+        )
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("manage_events"))
+
+    return render_template("add_event.html")
+
+
+@app.route("/edit_event/<int:id>", methods=["GET", "POST"])
+def edit_event(id):
+
+    conn = get_db()
+
+    if request.method == "POST":
+        event = request.form["event"]
+        date = request.form["date"]
+        time = request.form["time"]
+
+        conn.execute(
+            """
+            UPDATE events
+            SET event=?,date=?,time=?
+            WHERE id=?
+            """,
+            (event, date, time, id),
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("manage_events"))
+
+    event = conn.execute(
+        "SELECT * FROM events WHERE id=?",
+        (id,),
+    ).fetchone()
+
+    conn.close()
+
+    return render_template("edit_event.html", event=event)
+
+
+@app.route("/delete_event/<int:id>")
+def delete_event(id):
+
+    conn = get_db()
+
+    conn.execute(
+        "DELETE FROM events WHERE id=?",
+        (id,),
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("manage_events"))
+
+
+# ---------------- COMMITTEE MANAGEMENT ----------------
+
+@app.route("/manage_committee")
+def manage_committee():
+    conn = get_db()
+    members = conn.execute(
+        "SELECT * FROM committee ORDER BY id DESC"
+    ).fetchall()
+    conn.close()
+    return render_template("manage_committee.html", members=members)
+
+
+@app.route("/add_committee", methods=["GET", "POST"])
+def add_committee():
+
+    if request.method == "POST":
+        name = request.form["name"]
+        designation = request.form["designation"]
+        mobile = request.form["mobile"]
+
+        conn = get_db()
+        conn.execute(
+            """
+            INSERT INTO committee(name,designation,mobile)
+            VALUES(?,?,?)
+            """,
+            (name, designation, mobile),
+        )
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("manage_committee"))
+
+    return render_template("edit_committee.html")
+
+
+@app.route("/edit_committee/<int:id>", methods=["GET", "POST"])
+def edit_committee(id):
+
+    conn = get_db()
+
+    if request.method == "POST":
+        name = request.form["name"]
+        designation = request.form["designation"]
+        mobile = request.form["mobile"]
+
+        conn.execute(
+            """
+            UPDATE committee
+            SET name=?, designation=?, mobile=?
+            WHERE id=?
+            """,
+            (name, designation, mobile, id),
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("manage_committee"))
+
+    member = conn.execute(
+        "SELECT * FROM committee WHERE id=?",
+        (id,),
+    ).fetchone()
+
+    conn.close()
+
+    return render_template("edit_committee.html", member=member)
+
+
+@app.route("/delete_committee/<int:id>")
+def delete_committee(id):
+
+    conn = get_db()
+
+    conn.execute(
+        "DELETE FROM committee WHERE id=?",
+        (id,),
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("manage_committee"))
+
+
+@app.route("/change_committee_photo/<int:id>", methods=["GET", "POST"])
+def change_committee_photo(id):
+
+    conn = get_db()
+
+    if request.method == "POST":
+
+        photo = request.files.get("photo")
+
+        if photo and photo.filename:
+
+            filename = photo.filename
+            photo.save(
+                os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            )
+
+            conn.execute(
+                """
+                UPDATE committee
+                SET photo=?
+                WHERE id=?
+                """,
+                (filename, id),
+            )
+
+            conn.commit()
+
+        conn.close()
+        return redirect(url_for("manage_committee"))
+
+    member = conn.execute(
+        "SELECT * FROM committee WHERE id=?",
+        (id,),
+    ).fetchone()
+
+    conn.close()
+
+    return render_template(
+        "change_committee_photo.html",
+        member=member
+    )
+
+
+# ---------------- ANNOUNCEMENTS MANAGEMENT ----------------
+
+@app.route("/manage_announcements")
+def manage_announcements():
+    conn = get_db()
+    announcements = conn.execute(
+        "SELECT * FROM announcements ORDER BY id DESC"
+    ).fetchall()
+    conn.close()
+    return render_template(
+        "manage_announcements.html",
+        announcements=announcements
+    )
+
+
+@app.route("/add_announcement", methods=["POST"])
+def add_announcement():
+
+    title = request.form["title"]
+    message = request.form["message"]
+
+    from datetime import datetime
+    created_at = datetime.now().strftime("%d-%m-%Y %I:%M %p")
+
+    conn = get_db()
+
+    conn.execute(
+        """
+        INSERT INTO announcements
+        (title,message,created_at)
+        VALUES(?,?,?)
+        """,
+        (title, message, created_at),
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("manage_announcements"))
+
+
+@app.route("/edit_announcement/<int:id>", methods=["GET", "POST"])
+def edit_announcement(id):
+
+    conn = get_db()
+
+    if request.method == "POST":
+
+        title = request.form["title"]
+        message = request.form["message"]
+
+        conn.execute(
+            """
+            UPDATE announcements
+            SET title=?, message=?
+            WHERE id=?
+            """,
+            (title, message, id),
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("manage_announcements"))
+
+    announcement = conn.execute(
+        "SELECT * FROM announcements WHERE id=?",
+        (id,),
+    ).fetchone()
+
+    conn.close()
+
+    return render_template(
+        "manage_announcements.html",
+        announcement=announcement
+    )
+
+
+@app.route("/delete_announcement/<int:id>")
+def delete_announcement(id):
+
+    conn = get_db()
+
+    conn.execute(
+        "DELETE FROM announcements WHERE id=?",
+        (id,),
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("manage_announcements"))
+
+
+# ---------------- DONATIONS ----------------
+
+@app.route("/donation", methods=["GET", "POST"])
+def donation():
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        mobile = request.form["mobile"]
+        amount = request.form["amount"]
+        payment_mode = request.form["payment_mode"]
+        transaction_id = request.form["transaction_id"]
+
+        from datetime import datetime
+        donation_date = datetime.now().strftime("%d-%m-%Y %I:%M %p")
+
+        conn = get_db()
+
+        conn.execute(
+            """
+            INSERT INTO donations
+            (name,mobile,amount,payment_mode,transaction_id,donation_date)
+            VALUES(?,?,?,?,?,?)
+            """,
+            (
+                name,
+                mobile,
+                amount,
+                payment_mode,
+                transaction_id,
+                donation_date,
+            ),
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("donation"))
+
+    return render_template("donation.html")
+
+
+@app.route("/donation_admin")
+def donation_admin():
+
+    conn = get_db()
+
+    donations = conn.execute(
+        "SELECT * FROM donations ORDER BY id DESC"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "donation_admin.html",
+        donations=donations,
+    )
+
+
+@app.route("/delete_donation/<int:id>")
+def delete_donation(id):
+
+    conn = get_db()
+
+    conn.execute(
+        "DELETE FROM donations WHERE id=?",
+        (id,),
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("donation_admin"))
+
+
+# ---------------- T-SHIRT REGISTRATION ----------------
+
+@app.route("/tshirt", methods=["GET", "POST"])
+def tshirt():
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        mobile = request.form["mobile"]
+        tshirt_size = request.form["tshirt_size"]
+        quantity = request.form["quantity"]
+        address = request.form["address"]
+
+        conn = get_db()
+
+        conn.execute(
+            """
+            INSERT INTO tshirt_registration
+            (name,mobile,tshirt_size,quantity,address)
+            VALUES(?,?,?,?,?)
+            """,
+            (
+                name,
+                mobile,
+                tshirt_size,
+                quantity,
+                address,
+            ),
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("tshirt"))
+
+    return render_template("tshirt.html")
+
+
+@app.route("/tshirt_admin")
+def tshirt_admin():
+
+    conn = get_db()
+
+    registrations = conn.execute(
+        """
+        SELECT * FROM tshirt_registration
+        ORDER BY id DESC
+        """
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "tshirt_admin.html",
+        registrations=registrations,
+    )
+
+
+@app.route("/delete_tshirt/<int:id>")
+def delete_tshirt(id):
+
+    conn = get_db()
+
+    conn.execute(
+        "DELETE FROM tshirt_registration WHERE id=?",
+        (id,),
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("tshirt_admin"))
+
+
+# ---------------- GALLERY & UPLOAD ----------------
+
+# ---------------- GALLERY & UPLOAD ----------------
+
+from werkzeug.utils import secure_filename
+
+@app.route("/upload")
+def upload():
+    return render_template("upload.html")
+
+
+@app.route("/upload_image", methods=["POST"])
+def upload_image():
+
+    files = request.files.getlist("photos")
+    uploaded = 0
+
+    for file in files:
+
+        if file and allowed_file(file.filename):
+
+            filename = secure_filename(file.filename)
+
+            file.save(
+                os.path.join(
+                    app.config["UPLOAD_FOLDER"],
+                    filename
+                )
+            )
+
+            uploaded += 1
+
+    return redirect(url_for("manage_gallery"))
+
+
+@app.route("/manage_gallery")
+def manage_gallery():
+
+    folder = app.config["UPLOAD_FOLDER"]
+
+    files = []
+
+    if os.path.exists(folder):
+        files = sorted(os.listdir(folder))
+
+    return render_template(
+        "manage_gallery.html",
+        files=files
+    )
+
+
+@app.route("/delete_media/<filename>")
+def delete_media(filename):
+
+    path = os.path.join(
+        app.config["UPLOAD_FOLDER"],
+        filename
+    )
+
+    if os.path.exists(path):
+        os.remove(path)
+
+    return redirect(url_for("manage_gallery"))
+
+
+# ---------------- ADMIN DASHBOARD ----------------
+
+@app.route("/dashboard")
+def dashboard():
+
+    conn = get_db()
+
+    total_events = conn.execute(
+        "SELECT COUNT(*) FROM events"
+    ).fetchone()[0]
+
+    total_committee = conn.execute(
+        "SELECT COUNT(*) FROM committee"
+    ).fetchone()[0]
+
+    total_announcements = conn.execute(
+        "SELECT COUNT(*) FROM announcements"
+    ).fetchone()[0]
+
+    total_donations = conn.execute(
+        "SELECT COUNT(*) FROM donations"
+    ).fetchone()[0]
+
+    total_tshirts = conn.execute(
+        "SELECT COUNT(*) FROM tshirt_registration"
+    ).fetchone()[0]
+
+    conn.close()
+
+    return render_template(
+        "dashboard.html",
+        total_events=total_events,
+        total_committee=total_committee,
+        total_announcements=total_announcements,
+        total_donations=total_donations,
+        total_tshirts=total_tshirts
+    )
+
+
+@app.route("/logout")
+def logout():
+    return redirect(url_for("home"))
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5001)

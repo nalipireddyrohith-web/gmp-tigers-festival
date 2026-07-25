@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Donation</title>
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f4f4f4;
+}
+.container{
+    width:450px;
+    margin:40px auto;
+    background:#fff;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+}
+input{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+button{
+    width:100%;
+    padding:12px;
+    background:#198754;
+    color:white;
+    border:none;
+    border-radius:5px;
+    font-size:16px;
+    cursor:pointer;
+}
+img{
+    width:220px;
+    display:block;
+    margin:auto;
+}
+h2,p{
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Festival Donation</h2>
+
+<form action="/donation" method="POST" enctype="multipart/form-data">
+
+<input type="text" name="name" placeholder="Enter Name" required>
+
+<input type="text" name="mobile" placeholder="Phone Number" required>
+
+<input type="number" name="amount" placeholder="Donation Amount" required>
+
+<select name="payment_mode" required style="width:100%;padding:10px;margin:10px 0;">
+<option value="">Select Payment Method</option>
+<option>UPI</option>
+<option>Google Pay</option>
+<option>PhonePe</option>
+</select>
+
+<input type="text" name="transaction_id" placeholder="Transaction ID (Optional)">
+
+<p><b>Scan QR Code</b></p>
+
+<img src="/static/images/upi_qr.png" alt="QR Code">
+
+<p><b>Upload Payment Screenshot</b></p>
+
+<input type="file" name="receipt" accept="image/*" required>
+
+
+<label><b>Payment Screenshot</b></label><br>
+<input type="file" name="screenshot" accept="image/*" required><br><br>
+
+<button type="submit">
+Donate Now</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

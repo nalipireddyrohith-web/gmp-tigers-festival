@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events | GMP TIGERS</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f4f4f4;
+}
+
+nav{
+background:#ff6600;
+padding:18px 50px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+color:white;
+font-size:32px;
+font-weight:bold;
+}
+
+nav ul{
+display:flex;
+list-style:none;
+}
+
+nav ul li{
+margin-left:30px;
+}
+
+nav ul li a{
+text-decoration:none;
+color:white;
+font-weight:bold;
+}
+
+.hero{
+height:40vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:
+linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+url("{{ url_for('static', filename='images/ganesha.jpg') }}");
+background-size:cover;
+background-position:center;
+}
+
+.hero h1{
+color:white;
+font-size:60px;
+}
+
+.container{
+width:90%;
+max-width:1200px;
+margin:50px auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:25px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+}
+
+.card h2{
+color:#ff6600;
+margin-bottom:15px;
+}
+
+.card p{
+font-size:18px;
+line-height:1.6;
+}
+
+footer{
+background:#111;
+color:white;
+text-align:center;
+padding:20px;
+margin-top:40px;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+
+<div class="logo">🕉 GMP TIGERS</div>
+
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/about">About</a></li>
+<li><a href="/tshirt">T-Shirts</a></li>
+<li><a href="/contact">Contact</a></li>
+<li><a href="/events">Events</a></li>
+<li><a href="/gallery">Gallery</a></li>
+</ul>
+
+</nav>
+
+<div class="hero">
+<h1>Festival Events</h1>
+</div>
+
+<div class="container">
+
+<div class="card">
+<h2>🛕 Ganesh Idol Installation</h2>
+<p>Grand installation of Lord Ganesha with traditional pooja and prayers.</p>
+</div>
+
+<div class="card">
+<h2>🎵 Cultural Programs</h2>
+<p>Dance performances, devotional songs, and cultural competitions.</p>
+</div>
+
+<div class="card">
+<h2>🍛 Annadanam</h2>
+<p>Free food distribution for devotees and visitors.</p>
+</div>
+
+<div class="card">
+<h2>🙏 Daily Pooja</h2>
+<p>Morning and evening pooja with bhajans and aarti.</p>
+</div>
+
+<div class="card">
+<h2>🚩 Grand Procession</h2>
+<p>Traditional Vinayaka procession through Godugumani Palle village.</p>
+</div>
+
+<div class="card">
+<h2>🎆 Maha Visarjan</h2>
+<p>Final day celebration with devotional songs and visarjan procession.</p>
+</div>
+
+</div>
+
+<footer>
+© 2026 GMP TIGERS | Godugumani Palle
+</footer>
+
+
+<!-- Dynamic Events -->
+<section class="container my-5">
+    <h2 class="text-center text-warning mb-4">
+        🎉 Festival Events
+    </h2>
+
+    {% if events %}
+        <div class="row">
+        {% for event in events %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary">
+                            {{ event.event }}
+                        </h4>
+
+                        <p class="card-text">
+                            📅 <strong>Date:</strong> {{ event.date }}<br>
+                            ⏰ <strong>Time:</strong> {{ event.time }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            No events available.
+        </div>
+    {% endif %}
+</section>
+<!-- End Dynamic Events -->
+
+</body>
+</html>

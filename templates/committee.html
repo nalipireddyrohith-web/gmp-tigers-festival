@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Committee | GMP TIGERS{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align:center;margin:30px 0;">👥 Festival Committee</h1>
+
+<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:30px;">
+
+{% for m in members %}
+
+<div style="width:250px;background:#fff;border-radius:12px;padding:20px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.15);">
+
+<img src="{{ url_for('static', filename='committee_photos/' + m[4]) }}"
+     style="width:150px;height:150px;border-radius:50%;object-fit:cover;">
+
+<h3>{{ m[1] }}</h3>
+
+<p><strong>{{ m[2] }}</strong></p>
+
+<p>{{ m[3] }}</p>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

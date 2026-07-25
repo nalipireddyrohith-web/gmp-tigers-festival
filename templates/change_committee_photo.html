@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Change Committee Photo</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f5f5f5;
+    margin:30px;
+}
+
+.container{
+    max-width:500px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+    text-align:center;
+}
+
+img{
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:20px;
+}
+
+button{
+    background:#ff6600;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>📷 Change Committee Member Photo</h2>
+
+{% if member[4] %}
+<img src="{{ url_for('static', filename='committee_photos/' + member[4]) }}">
+{% endif %}
+
+<form action="{{ url_for('change_committee_photo', id=member[0]) }}" method="POST" enctype="multipart/form-data">
+
+<input type="file" name="photo" accept="image/*" required>
+
+<br><br>
+
+<button type="submit">
+Upload New Photo
+</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

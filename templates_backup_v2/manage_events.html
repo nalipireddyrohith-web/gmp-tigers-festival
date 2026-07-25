@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Manage Events</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+padding:30px;
+}
+
+.container{
+width:90%;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:10px;
+}
+
+h1{
+text-align:center;
+color:#ff6600;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+}
+
+button{
+background:#ff6600;
+color:white;
+border:none;
+padding:10px 20px;
+cursor:pointer;
+border-radius:5px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:25px;
+}
+
+th,td{
+border:1px solid #ddd;
+padding:10px;
+text-align:center;
+}
+
+th{
+background:#ff6600;
+color:white;
+}
+
+.edit{
+background:green;
+color:white;
+padding:8px 12px;
+text-decoration:none;
+border-radius:5px;
+}
+
+.delete{
+background:red;
+color:white;
+padding:8px 12px;
+text-decoration:none;
+border-radius:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Manage Festival Events</h1>
+
+<form action="/save_event" method="POST">
+
+<input type="text" name="event" placeholder="Event Name" required>
+
+<input type="date" name="date" required>
+
+<input type="time" name="time" required>
+
+<button>Add Event</button>
+
+</form>
+
+<table>
+
+<tr>
+
+<th>ID</th>
+<th>Event</th>
+<th>Date</th>
+<th>Time</th>
+<th>Edit</th>
+<th>Delete</th>
+
+</tr>
+
+{% for event in events %}
+
+<tr>
+
+<td>{{ event[0] }}</td>
+<td>{{ event[1] }}</td>
+<td>{{ event[2] }}</td>
+<td>{{ event[3] }}</td>
+
+<td>
+<a class="edit" href="/edit_event/{{ event[0] }}">
+✏️ Edit
+</a>
+</td>
+
+<td>
+<a class="delete"
+href="/delete_event/{{ event[0] }}"
+onclick="return confirm('Delete this event?')">
+🗑 Delete
+</a>
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

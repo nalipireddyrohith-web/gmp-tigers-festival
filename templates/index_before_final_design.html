@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Home | GMP TIGERS{% endblock %}
+
+{% block content %}
+
+
+<section class="hero">
+
+<div class="hero-content">
+<h1>🙏 GMP TIGERS</h1>
+<p>Vinayaka Chavithi Celebrations</p>
+</div>
+
+</section>
+
+
+
+<section class="countdown-section">
+
+<h2>🙏 Festival Countdown</h2>
+
+<div id="countdown">
+Loading...
+</div>
+
+</section>
+
+
+
+<section class="explore-section">
+
+<h2>✨ Explore Festival</h2>
+
+<div class="container">
+
+<div class="card">
+<h2>📅 Festival Events</h2>
+<p>Check all celebrations, poojas and competitions.</p>
+<a href="/events">View Events</a>
+</div>
+
+
+<div class="card">
+<h2>📷 Gallery</h2>
+<p>See beautiful photos and videos from the festival.</p>
+<a href="/gallery">Open Gallery</a>
+</div>
+
+
+<div class="card">
+<h2>🙏 Support Festival</h2>
+<p>Contribute towards festival celebrations.</p>
+<a href="/donation">Donate</a>
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<section class="location-section">
+
+<div class="location-container">
+
+
+<div class="location-text">
+
+<h2>📍 Festival Location</h2>
+
+<p>
+🙏 GMP TIGERS Vinayaka Chavithi Celebrations
+</p>
+
+<p>
+Godugumani Palle Village<br>
+Chittoor District<br>
+Andhra Pradesh<br>
+India
+</p>
+
+</div>
+
+
+<div class="map-box">
+
+<iframe
+src="https://www.google.com/maps?q=Godugumani%20Palle%20Chittoor%20Andhra%20Pradesh&output=embed"
+width="100%"
+height="350"
+style="border:0;border-radius:20px;"
+allowfullscreen=""
+loading="lazy">
+</iframe>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<script>
+
+var festivalDate = new Date("September 7, 2026 00:00:00").getTime();
+
+setInterval(function(){
+
+var now = new Date().getTime();
+
+var distance = festivalDate - now;
+
+
+var days = Math.floor(distance/(1000*60*60*24));
+
+var hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+
+var minutes = Math.floor((distance%(1000*60*60))/(1000*60));
+
+var seconds = Math.floor((distance%(1000*60))/1000);
+
+
+document.getElementById("countdown").innerHTML =
+days+" Days "+hours+" Hours "+minutes+" Minutes "+seconds+" Seconds";
+
+
+},1000);
+
+
+</script>
+
+
+{% endblock %}

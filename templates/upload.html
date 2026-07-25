@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Gallery</title>
+</head>
+<body>
+
+<h2>Upload Images & Videos</h2>
+
+<form action="/upload_image"
+      method="POST"
+      enctype="multipart/form-data">
+
+    <input
+        type="file"
+        name="photos"
+        multiple
+        accept="image/*,video/*">
+
+    <br><br>
+
+    <button type="submit">
+        Upload
+    </button>
+
+</form>
+
+<br>
+
+<a href="/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Home | GMP TIGERS{% endblock %}
+
+{% block content %}
+
+
+<div id="festivalCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+
+<div class="carousel-inner">
+
+<div class="carousel-item active">
+<img src="{{ url_for('static', filename='images/ganesha.jpg') }}"
+class="d-block w-100"
+style="height:600px;object-fit:cover;">
+</div>
+
+<div class="carousel-item">
+<img src="{{ url_for('static', filename='images/temple1.jpeg') }}"
+class="d-block w-100"
+style="height:600px;object-fit:cover;">
+</div>
+
+<div class="carousel-item">
+<img src="{{ url_for('static', filename='images/temple10.jpg') }}"
+class="d-block w-100"
+style="height:600px;object-fit:cover;">
+</div>
+
+</div>
+
+<button class="carousel-control-prev" type="button"
+data-bs-target="#festivalCarousel"
+data-bs-slide="prev">
+<span class="carousel-control-prev-icon"></span>
+</button>
+
+<button class="carousel-control-next" type="button"
+data-bs-target="#festivalCarousel"
+data-bs-slide="next">
+<span class="carousel-control-next-icon"></span>
+</button>
+
+</div>
+
+
+
+<section class="container py-5">
+
+<div class="row g-4">
+
+<div class="col-md-3">
+<div class="stat-card">
+<div class="stat-number">5000+</div>
+<div class="stat-title">👥 Visitors</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="stat-card">
+<div class="stat-number">25+</div>
+<div class="stat-title">🎉 Events</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="stat-card">
+<div class="stat-number">100+</div>
+<div class="stat-title">🤝 Volunteers</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="stat-card">
+<div class="stat-number">₹2L+</div>
+<div class="stat-title">💝 Donations</div>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<section class="py-5 text-center" style="background:#fff8f0;">
+
+    <div class="container">
+
+        <h2 class="mb-4 text-warning">🙏 Festival Information</h2>
+
+        <p class="fs-5">
+            Vinayaka Chavithi is celebrated with great devotion in Godugumani Palle.
+            The GMP TIGERS team warmly welcomes everyone to participate in the pooja,
+            cultural programs, prasadam distribution, and community celebrations.
+        </p>
+
+    </div>
+
+</section>
+
+<section class="py-5 bg-white">
+
+    <div class="container">
+
+        <h2 class="text-center text-warning mb-5">
+            📢 Latest Announcements
+        </h2>
+
+        {% if announcements %}
+
+        <div class="row">
+
+            {% for a in announcements %}
+
+            <div class="col-md-4 mb-4">
+
+                <div class="card h-100 p-4">
+
+                    <h3 class="text-warning">
+                        {{ a.title }}
+                    </h3>
+
+                    <p>
+                        {{ a.message }}
+                    </p>
+
+                    <hr>
+
+                    <small class="text-muted">
+                        🕒 {{ a.created_at }}
+                    </small>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="alert alert-warning">
+            No announcements available.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+<section class="py-5" style="background:#fff8f0;">
+
+    <div class="container">
+
+        <h2 class="text-center text-warning mb-5">
+            ✨ Explore Festival
+        </h2>
+
+        <div class="row text-center">
+
+            <div class="col-md-4 mb-4">
+
+                <div class="card h-100 p-4">
+
+                    <h1>📅</h1>
+
+                    <h3>Festival Events</h3>
+
+                    <p>Check all celebrations, poojas and competitions.</p>
+
+                    <a href="/events" class="btn btn-primary">
+                        View Events
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mb-4">
+
+                <div class="card h-100 p-4">
+
+                    <h1>📷</h1>
+
+                    <h3>Gallery</h3>
+
+                    <p>See beautiful photos and videos from the festival.</p>
+
+                    <a href="/gallery" class="btn btn-primary">
+                        Open Gallery
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mb-4">
+
+                <div class="card h-100 p-4">
+
+                    <h1>🙏</h1>
+
+                    <h3>Support Festival</h3>
+
+                    <p>Contribute towards festival celebrations.</p>
+
+                    <a href="/donation" class="btn btn-primary">
+                        Donate
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+<section class="py-5 text-center" style="background:#fff8f0;">
+
+    <div class="container">
+
+        <h2 class="text-warning mb-4">
+            📍 Festival Location
+        </h2>
+
+        <iframe
+            src="https://www.google.com/maps?q=Godugumani+Palle&output=embed"
+            width="100%"
+            height="450"
+            style="border:0;border-radius:15px;"
+            loading="lazy">
+        </iframe>
+
+    </div>
+
+</section>
+
+<script>
+
+const festivalDate = new Date("2026-09-15T00:00:00").getTime();
+
+function updateCountdown() {
+
+    const now = new Date().getTime();
+    const distance = festivalDate - now;
+
+    if (distance <= 0) {
+        document.getElementById("countdown").innerHTML =
+            "🎉 Happy Vinayaka Chavithi!";
+        return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("countdown").innerHTML =
+        `⏳ ${days} Days : ${hours} Hours : ${minutes} Minutes : ${seconds} Seconds`;
+
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+</script>
+
+{% endblock %}

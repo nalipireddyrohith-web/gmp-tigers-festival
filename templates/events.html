@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Events | GMP TIGERS{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>🎉 Festival Events</h1>
+        <p>Join us in celebrating Vinayaka Chavithi with devotion, culture, and community.</p>
+    </div>
+</section>
+
+<section class="container py-5">
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card h-100 p-4">
+                <h3>🛕 Ganesh Idol Installation</h3>
+                <p>Grand installation of Lord Ganesha with traditional pooja and prayers.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 p-4">
+                <h3>🎵 Cultural Programs</h3>
+                <p>Dance performances, devotional songs and cultural competitions.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 p-4">
+                <h3>🍛 Annadanam</h3>
+                <p>Free food distribution for devotees and visitors.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 p-4">
+                <h3>🙏 Daily Pooja</h3>
+                <p>Morning and evening pooja with bhajans and aarti.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 p-4">
+                <h3>🚩 Grand Procession</h3>
+                <p>Traditional Vinayaka procession through Godugumani Palle village.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 p-4">
+                <h3>🎆 Maha Visarjan</h3>
+                <p>Final day celebration with devotional songs and visarjan procession.</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="container py-5">
+
+    <h2 class="text-center text-warning mb-5">
+        📅 Scheduled Events
+    </h2>
+
+    {% if events %}
+
+    <div class="row">
+
+        {% for event in events %}
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card h-100 p-4">
+
+                <h4 class="text-warning">
+                    {{ event.event }}
+                </h4>
+
+                <p>
+                    📅 <strong>Date:</strong> {{ event.date }}<br>
+                    ⏰ <strong>Time:</strong> {{ event.time }}
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="alert alert-info text-center">
+        No events available.
+    </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

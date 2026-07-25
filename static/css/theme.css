@@ -1,0 +1,204 @@
+/* ===============================
+   GMP TIGERS V2 THEME
+================================ */
+
+:root{
+    --primary:#ff6b00;
+    --secondary:#ff9800;
+    --bg:#f5f7fb;
+    --dark:#222;
+    --white:#fff;
+    --radius:18px;
+}
+
+body{
+    background:var(--bg);
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+/* Navbar */
+
+.navbar{
+    background:linear-gradient(90deg,#ff6b00,#ff9800)!important;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+.navbar-brand{
+    color:white!important;
+    font-size:28px;
+    font-weight:bold;
+}
+
+/* Hero */
+
+.hero{
+    min-height:90vh;
+    background:
+    linear-gradient(rgba(0,0,0,.60),rgba(0,0,0,.60)),
+    url("../images/ganesha.jpg");
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    color:white;
+    padding:30px;
+}
+
+.hero-content{
+    max-width:900px;
+}
+
+.hero h1{
+    font-size:58px;
+    margin-bottom:15px;
+}
+
+.hero h2{
+    color:#ffd54f;
+    margin-bottom:20px;
+}
+
+.hero p{
+    font-size:22px;
+    margin:25px 0;
+}
+
+.hero-countdown{
+    display:inline-block;
+    padding:15px 30px;
+    border-radius:15px;
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(8px);
+    font-size:26px;
+    font-weight:bold;
+    color:#ffd54f;
+}
+
+/* Buttons */
+
+.btn{
+    border-radius:30px;
+    padding:12px 30px;
+    font-weight:bold;
+}
+
+.btn-primary{
+    background:#ff6b00;
+    border:none;
+}
+
+.btn-primary:hover{
+    background:#e65c00;
+}
+
+/* Cards */
+
+.card{
+    border:none;
+    border-radius:18px;
+    box-shadow:0 10px 20px rgba(0,0,0,.10);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+/* Footer */
+
+footer{
+    background:#111;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.hero h1{
+    font-size:36px;
+}
+
+.hero h2{
+    font-size:24px;
+}
+
+.hero p{
+    font-size:18px;
+}
+
+.hero-countdown{
+    font-size:18px;
+}
+
+.btn{
+    display:block;
+    width:220px;
+    margin:12px auto;
+}
+
+}
+/* ===========================
+   PHASE 2 HERO
+=========================== */
+
+.hero{
+    position:relative;
+    overflow:hidden;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        rgba(0,0,0,.55),
+        rgba(0,0,0,.55)
+    );
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.hero h1{
+    font-size:64px;
+    font-weight:700;
+}
+
+.hero p{
+    font-size:24px;
+}
+
+.hero .btn{
+    margin:10px;
+}
+
+.stat-card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.10);
+    transition:.3s;
+}
+
+.stat-card:hover{
+    transform:translateY(-8px);
+}
+
+.stat-number{
+    font-size:38px;
+    color:#ff6b00;
+    font-weight:bold;
+}
+
+.stat-title{
+    color:#666;
+}
+

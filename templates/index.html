@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block title %}Home | GMP TIGERS
+<script>
+const festivalDate = new Date("2026-09-14T00:00:00").getTime();
+
+function updateCountdown(){
+    const now = new Date().getTime();
+    const distance = festivalDate - now;
+
+    if(distance <= 0){
+        document.getElementById("countdown-box").innerHTML="<h3 style='color:white;'>🎉 Happy Vinayaka Chavithi!</h3>";
+        return;
+    }
+
+    document.getElementById("days").innerHTML=Math.floor(distance/(1000*60*60*24));
+    document.getElementById("hours").innerHTML=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+    document.getElementById("minutes").innerHTML=Math.floor((distance%(1000*60*60))/(1000*60));
+    document.getElementById("seconds").innerHTML=Math.floor((distance%(1000*60))/1000);
+}
+
+updateCountdown();
+setInterval(updateCountdown,1000);
+</script>
+
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+.hero{
+height:100vh;
+background:
+linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,.55)),
+url("{{ url_for('static', filename='images/ganesha.jpg') }}");
+background-size:110%;
+background-position:center;
+background-repeat:no-repeat;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+animation:heroZoom 18s ease-in-out infinite alternate;
+}
+
+@keyframes heroZoom{
+0%{
+background-size:100%;
+}
+100%{
+background-size:110%;
+}
+}}");
+background-size:cover;
+background-position:center;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+}
+
+.hero-content{
+color:white;
+max-width:900px;
+}
+
+.hero h1{
+font-size:72px;
+font-weight:800;
+letter-spacing:2px;
+text-shadow:0 4px 12px rgba(0,0,0,.5);
+margin-bottom:20px;
+}
+
+.hero h2{
+font-size:38px;
+font-weight:600;
+color:#FFD54F;
+margin-bottom:25px;
+text-shadow:0 2px 8px rgba(0,0,0,.4);
+}
+
+.hero p{
+font-size:24px;
+line-height:1.9;
+max-width:760px;
+margin:0 auto 40px;
+}
+
+.btn{
+display:inline-block;
+padding:16px 38px;
+margin:10px;
+background:linear-gradient(45deg,#ff6600,#ff9800);
+color:white;
+text-decoration:none;
+border-radius:40px;
+font-weight:700;
+font-size:18px;
+transition:.35s;
+box-shadow:0 8px 18px rgba(0,0,0,.25);
+}
+
+.btn:hover{
+transform:translateY(-4px);
+box-shadow:0 12px 24px rgba(0,0,0,.35);
+}
+
+.info{
+padding:80px 20px;
+text-align:center;
+background:white;
+}
+
+.info h2{
+font-size:40px;
+color:#ff6600;
+margin-bottom:20px;
+}
+
+.info p{
+max-width:900px;
+margin:auto;
+font-size:20px;
+line-height:1.8;
+}
+
+.announce{
+background:#fff8e1;
+padding:70px 20px;
+}
+
+.announce h2{
+text-align:center;
+font-size:40px;
+color:#ff6600;
+margin-bottom:35px;
+}
+
+.card{
+background:white;
+max-width:850px;
+margin:20px auto;
+padding:20px;
+border-radius:12px;
+box-shadow:0 3px 10px rgba(0,0,0,.15);
+}
+
+.card h3{
+color:#ff6600;
+margin-bottom:10px;
+}
+
+.card small{
+color:gray;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:72px;
+font-weight:800;
+letter-spacing:2px;
+text-shadow:0 4px 12px rgba(0,0,0,.5);
+margin-bottom:20px;
+}
+.hero h2{
+font-size:38px;
+font-weight:600;
+color:#FFD54F;
+margin-bottom:25px;
+text-shadow:0 2px 8px rgba(0,0,0,.4);
+}
+.hero p{
+font-size:24px;
+line-height:1.9;
+max-width:760px;
+margin:0 auto 40px;
+}
+
+.btn{
+display:block;
+width:220px;
+margin:15px auto;
+}
+
+.info h2,
+.announce h2{
+font-size:30px;
+}
+
+.info p{
+font-size:18px;
+}
+
+}
+
+</style>
+
+<section class="hero">
+
+<div class="hero-content">
+
+<h1>🕉 VINAYAKA CHAVITHI 2026</h1>
+
+<h2>Godugumani Palle</h2>
+
+<p>
+Welcome to the Official GMP TIGERS Festival Website.<br>
+Join us in celebrating devotion, unity and tradition.
+</p>
+
+<div id="countdown-box" style="
+display:flex;
+justify-content:center;
+gap:15px;
+margin:30px auto;
+flex-wrap:wrap;
+">
+
+<div style="background:rgba(255,255,255,.15);backdrop-filter:blur(8px);padding:15px 22px;border-radius:15px;text-align:center;min-width:90px;border:1px solid rgba(255,255,255,.3);">
+<div id="days" style="font-size:34px;font-weight:bold;color:#FFD54F;">00</div>
+<div style="color:white;">Days</div>
+</div>
+
+<div style="background:rgba(255,255,255,.15);backdrop-filter:blur(8px);padding:15px 22px;border-radius:15px;text-align:center;min-width:90px;border:1px solid rgba(255,255,255,.3);">
+<div id="hours" style="font-size:34px;font-weight:bold;color:#FFD54F;">00</div>
+<div style="color:white;">Hours</div>
+</div>
+
+<div style="background:rgba(255,255,255,.15);backdrop-filter:blur(8px);padding:15px 22px;border-radius:15px;text-align:center;min-width:90px;border:1px solid rgba(255,255,255,.3);">
+<div id="minutes" style="font-size:34px;font-weight:bold;color:#FFD54F;">00</div>
+<div style="color:white;">Minutes</div>
+</div>
+
+<div style="background:rgba(255,255,255,.15);backdrop-filter:blur(8px);padding:15px 22px;border-radius:15px;text-align:center;min-width:90px;border:1px solid rgba(255,255,255,.3);">
+<div id="seconds" style="font-size:34px;font-weight:bold;color:#FFD54F;">00</div>
+<div style="color:white;">Seconds</div>
+</div>
+
+</div>
+
+
+<a href="/events" class="btn">📅 View Events</a>
+<a href="/gallery" class="btn">📷 Gallery</a>
+
+</div>
+
+</section>
+
+
+
+
+
+
+<script>
+const festivalDate = new Date("2026-09-14T00:00:00").getTime();
+
+function updateCountdown(){
+    const now = new Date().getTime();
+    const distance = festivalDate - now;
+
+    if(distance <= 0){
+        document.getElementById("countdown-box").innerHTML="<h3 style='color:white;'>🎉 Happy Vinayaka Chavithi!</h3>";
+        return;
+    }
+
+    document.getElementById("days").innerHTML=Math.floor(distance/(1000*60*60*24));
+    document.getElementById("hours").innerHTML=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+    document.getElementById("minutes").innerHTML=Math.floor((distance%(1000*60*60))/(1000*60));
+    document.getElementById("seconds").innerHTML=Math.floor((distance%(1000*60))/1000);
+}
+
+updateCountdown();
+setInterval(updateCountdown,1000);
+</script>
+
+{% endblock %}
+

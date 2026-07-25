@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>GMP TIGERS Admin</title>
+
+<style>
+
+body{
+font-family:Arial,sans-serif;
+background:#f4f4f4;
+margin:0;
+padding:0;
+}
+
+.header{
+background:#ff6b00;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;
+padding:30px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+text-align:center;
+}
+
+.button{
+display:inline-block;
+background:#ff6b00;
+color:white;
+text-decoration:none;
+padding:10px 20px;
+border-radius:8px;
+margin-top:10px;
+}
+
+.button:hover{
+background:#e65c00;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+<h1>GMP TIGERS Admin Dashboard</h1>
+</div>
+
+<div class="container">
+
+<div class="card">
+<h2>📷 Upload Images</h2>
+<p>Upload festival photos.</p>
+<a href="/upload" class="button">Upload Images</a>
+</div>
+
+<div class="card">
+<h2>🖼 Gallery</h2>
+<p>View uploaded gallery images.</p>
+<a href="/gallery" class="button">Open Gallery</a>
+</div>
+
+<div class="card">
+<h2>📅 Events</h2>
+<p>Add or edit festival events.</p>
+<a href="/manage_events" class="button">Manage Events</a>
+</div>
+
+<div class="card">
+<h2>👕 T-Shirt</h2>
+<p>View T-shirt registrations.</p>
+<a href="/tshirt_admin" class="button">Registrations</a>
+</div>
+
+<div class="card">
+<h2>💰 Donations</h2>
+<p>Manage donations.</p>
+<a href="/donation_admin" class="button">Donations</a>
+</div>
+
+<div class="card">
+<h2>📢 Announcements</h2>
+<p>Manage announcements.</p>
+<a href="/manage_announcements" class="button">Announcements</a>
+</div>
+
+<div class="card">
+<h2>👥 Committee</h2>
+<p>Manage committee members.</p>
+<a href="/manage_committee" class="button">Committee</a>
+</div>
+
+<div class="card">
+<h2>📊 Dashboard</h2>
+<p>View statistics.</p>
+<a href="/dashboard" class="button">Dashboard</a>
+</div>
+
+</div>
+
+</body>
+</html>

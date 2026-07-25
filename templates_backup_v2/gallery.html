@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery | GMP TIGERS</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f5f5f5;
+}
+
+nav{
+background:#ff6600;
+padding:18px 50px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+color:white;
+font-size:32px;
+font-weight:bold;
+}
+
+nav ul{
+display:flex;
+list-style:none;
+}
+
+nav ul li{
+margin-left:30px;
+}
+
+nav ul li a{
+text-decoration:none;
+color:white;
+font-weight:bold;
+}
+
+.hero{
+height:40vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:
+linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+url("{{ url_for('static', filename='images/ganesha.jpg') }}");
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+}
+
+.hero h1{
+color:white;
+font-size:60px;
+}
+
+.gallery{
+width:90%;
+margin:50px auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:25px;
+}
+
+.gallery img{
+width:100%;
+height:auto;
+max-height:450px;
+object-fit:contain;
+background:#fff;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+transition:.3s;
+cursor:pointer;
+padding:10px;
+}
+
+.gallery img:hover{
+transform:scale(1.05);
+}
+
+.empty{
+text-align:center;
+font-size:24px;
+padding:60px;
+}
+
+footer{
+background:#111;
+color:white;
+text-align:center;
+padding:20px;
+margin-top:40px;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+
+<div class="logo">🕉 GMP TIGERS</div>
+
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/about">About</a></li>
+<li><a href="/tshirt">T-Shirts</a></li>
+<li><a href="/contact">Contact</a></li>
+<li><a href="/events">Events</a></li>
+<li><a href="/gallery">Gallery</a></li>
+</ul>
+
+</nav>
+
+<div class="hero">
+<h1>Festival Gallery</h1>
+</div>
+
+{% if images %}
+
+<div class="gallery">
+
+{% for image in images %}
+
+<img src="{{ url_for('static', filename='uploads/' + image) }}" alt="Festival Image">
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty">
+No photos uploaded yet.
+</div>
+
+{% endif %}
+
+<footer>
+
+© 2026 GMP TIGERS | Godugumani Palle
+
+</footer>
+
+
+<!-- Dynamic Gallery -->
+<section class="container my-5">
+    <h2 class="text-center text-warning mb-4">
+        📸 Festival Gallery
+    </h2>
+
+    {% if files %}
+    <div class="row">
+        {% for file in files %}
+        <div class="col-md-3 mb-4">
+            <div class="card shadow">
+
+                {% if file.endswith(('.jpg','.jpeg','.png','.gif','.webp')) %}
+                <img src="{{ url_for('static', filename='uploads/' + file) }}"
+                     class="card-img-top"
+                     style="height:220px;object-fit:cover;">
+                {% else %}
+                <video controls style="width:100%;height:220px;">
+                    <source src="{{ url_for('static', filename='uploads/' + file) }}">
+                </video>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        No media uploaded yet.
+    </div>
+    {% endif %}
+</section>
+<!-- End Dynamic Gallery -->
+
+</body>
+</html>

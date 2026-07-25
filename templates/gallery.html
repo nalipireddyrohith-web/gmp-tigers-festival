@@ -16,7 +16,7 @@ h1{text-align:center;color:#ff6b00;}
 <h1>Gallery</h1>
 
 <div class="grid">
-{% for file in files %}
+{% for file in gallery_files %}
 <div class="card">
 
 {% if file.lower().endswith(('.jpg','.jpeg','.png','.gif','.webp')) %}

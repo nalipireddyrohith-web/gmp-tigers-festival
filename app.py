@@ -29,7 +29,9 @@ os.makedirs(app.config["COMMITTEE_FOLDER"], exist_ok=True)
 
 DATABASE = "festival.db"
 
-GALLERY_FOLDER = "static/uploads"
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+GALLERY_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
 os.makedirs(GALLERY_FOLDER, exist_ok=True)
 
 COMMITTEE_FOLDER = "static/committee_photos"

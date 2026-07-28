@@ -10,6 +10,8 @@ DATABASE_URL = os.getenv(
     "postgresql://postgres:postgres@localhost:5432/gmp_tigers"
 )
 
+print("DATABASE_URL =", DATABASE_URL.split("@")[-1])
+
 UPLOAD_FOLDER = "static/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -388,6 +390,23 @@ def change_committee_photo(id):
         member=member
     )
 
+
+
+@app.route("/announcements")
+def announcements():
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT * FROM announcements ORDER BY id DESC"
+    )
+    announcements = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return render_template(
+        "announcements.html",
+        announcements=announcements
+    )
 
 # ---------------- ANNOUNCEMENTS MANAGEMENT ----------------
 

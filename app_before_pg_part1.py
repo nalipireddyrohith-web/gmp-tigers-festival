@@ -83,6 +83,9 @@ def init_db():
     cur.close()
     conn.close()
 
+    conn.row_factory = sqlite3.Row
+    return conn
+
 
 # ---------------- HOME ----------------
 
@@ -114,10 +117,9 @@ def gallery():
 @app.route("/events")
 def events():
     conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM events ORDER BY id DESC")
-    data = cur.fetchall()
-    cur.close()
+    data = conn.execute(
+        "SELECT * FROM events ORDER BY id DESC"
+    ).fetchall()
     conn.close()
     return render_template("events.html", events=data)
 
@@ -125,10 +127,9 @@ def events():
 @app.route("/committee")
 def committee():
     conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM committee ORDER BY id DESC")
-    data = cur.fetchall()
-    cur.close()
+    data = conn.execute(
+        "SELECT * FROM committee ORDER BY id DESC"
+    ).fetchall()
     conn.close()
     return render_template("committee.html", members=data)
 
@@ -157,10 +158,9 @@ def login():
 @app.route("/manage_events")
 def manage_events():
     conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM events ORDER BY id DESC")
-    events = cur.fetchall()
-    cur.close()
+    events = conn.execute(
+        "SELECT * FROM events ORDER BY id DESC"
+    ).fetchall()
     conn.close()
     return render_template("manage_events.html", events=events)
 
@@ -174,13 +174,11 @@ def add_event():
         time = request.form["time"]
 
         conn = get_db()
-        cur = conn.cursor()
-        cur.execute(
+        conn.execute(
             "INSERT INTO events(event,date,time) VALUES(%s,%s,%s)",
             (event, date, time),
         )
         conn.commit()
-        cur.close()
         conn.close()
 
         return redirect(url_for("manage_events"))
@@ -198,30 +196,25 @@ def edit_event(id):
         date = request.form["date"]
         time = request.form["time"]
 
-        cur = conn.cursor()
-        cur.execute(
+        conn.execute(
             """
             UPDATE events
             SET event=%s,date=%s,time=%s
-            WHERE id=%s
+            WHERE id=?
             """,
             (event, date, time, id),
         )
 
         conn.commit()
-        cur.close()
         conn.close()
 
         return redirect(url_for("manage_events"))
 
-    cur = conn.cursor()
-    cur.execute(
+    event = conn.execute(
         "SELECT * FROM events WHERE id=%s",
         (id,),
-    )
-    event = cur.fetchone()
+    ).fetchone()
 
-    cur.close()
     conn.close()
 
     return render_template("edit_event.html", event=event)
@@ -232,14 +225,12 @@ def delete_event(id):
 
     conn = get_db()
 
-    cur = conn.cursor()
-    cur.execute(
+    conn.execute(
         "DELETE FROM events WHERE id=%s",
         (id,),
     )
 
     conn.commit()
-    cur.close()
     conn.close()
 
     return redirect(url_for("manage_events"))
@@ -250,10 +241,9 @@ def delete_event(id):
 @app.route("/manage_committee")
 def manage_committee():
     conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM committee ORDER BY id DESC")
-    members = cur.fetchall()
-    cur.close()
+    members = conn.execute(
+        "SELECT * FROM committee ORDER BY id DESC"
+    ).fetchall()
     conn.close()
     return render_template("manage_committee.html", members=members)
 
@@ -267,8 +257,7 @@ def add_committee():
         mobile = request.form["mobile"]
 
         conn = get_db()
-        cur = conn.cursor()
-        cur.execute(
+        conn.execute(
             """
             INSERT INTO committee(name,designation,mobile)
             VALUES(%s,%s,%s)
@@ -276,7 +265,6 @@ def add_committee():
             (name, designation, mobile),
         )
         conn.commit()
-        cur.close()
         conn.close()
 
         return redirect(url_for("manage_committee"))
@@ -294,30 +282,25 @@ def edit_committee(id):
         designation = request.form["designation"]
         mobile = request.form["mobile"]
 
-        cur = conn.cursor()
-        cur.execute(
+        conn.execute(
             """
             UPDATE committee
             SET name=%s, designation=%s, mobile=%s
-            WHERE id=%s
+            WHERE id=?
             """,
             (name, designation, mobile, id),
         )
 
         conn.commit()
-        cur.close()
         conn.close()
 
         return redirect(url_for("manage_committee"))
 
-    cur = conn.cursor()
-    cur.execute(
+    member = conn.execute(
         "SELECT * FROM committee WHERE id=%s",
         (id,),
-    )
-    member = cur.fetchone()
+    ).fetchone()
 
-    cur.close()
     conn.close()
 
     return render_template("edit_committee.html", member=member)
@@ -328,14 +311,12 @@ def delete_committee(id):
 
     conn = get_db()
 
-    cur = conn.cursor()
-    cur.execute(
+    conn.execute(
         "DELETE FROM committee WHERE id=%s",
         (id,),
     )
 
     conn.commit()
-    cur.close()
     conn.close()
 
     return redirect(url_for("manage_committee"))
@@ -357,30 +338,25 @@ def change_committee_photo(id):
                 os.path.join(app.config["UPLOAD_FOLDER"], filename)
             )
 
-            cur = conn.cursor()
-            cur.execute(
+            conn.execute(
                 """
                 UPDATE committee
-                SET photo=%s
-                WHERE id=%s
+                SET photo=?
+                WHERE id=?
                 """,
                 (filename, id),
             )
 
             conn.commit()
-            cur.close()
 
         conn.close()
         return redirect(url_for("manage_committee"))
 
-    cur = conn.cursor()
-    cur.execute(
+    member = conn.execute(
         "SELECT * FROM committee WHERE id=%s",
         (id,),
-    )
-    member = cur.fetchone()
+    ).fetchone()
 
-    cur.close()
     conn.close()
 
     return render_template(
@@ -394,10 +370,9 @@ def change_committee_photo(id):
 @app.route("/manage_announcements")
 def manage_announcements():
     conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM announcements ORDER BY id DESC")
-    announcements = cur.fetchall()
-    cur.close()
+    announcements = conn.execute(
+        "SELECT * FROM announcements ORDER BY id DESC"
+    ).fetchall()
     conn.close()
     return render_template(
         "manage_announcements.html",
@@ -415,9 +390,8 @@ def add_announcement():
     created_at = datetime.now().strftime("%d-%m-%Y %I:%M %p")
 
     conn = get_db()
-    cur = conn.cursor()
 
-    cur.execute(
+    conn.execute(
         """
         INSERT INTO announcements
         (title,message,created_at)
@@ -427,7 +401,6 @@ def add_announcement():
     )
 
     conn.commit()
-    cur.close()
     conn.close()
 
     return redirect(url_for("manage_announcements"))
@@ -443,30 +416,25 @@ def edit_announcement(id):
         title = request.form["title"]
         message = request.form["message"]
 
-        cur = conn.cursor()
-        cur.execute(
+        conn.execute(
             """
             UPDATE announcements
             SET title=%s, message=%s
-            WHERE id=%s
+            WHERE id=?
             """,
             (title, message, id),
         )
 
         conn.commit()
-        cur.close()
         conn.close()
 
         return redirect(url_for("manage_announcements"))
 
-    cur = conn.cursor()
-    cur.execute(
+    announcement = conn.execute(
         "SELECT * FROM announcements WHERE id=%s",
         (id,),
-    )
-    announcement = cur.fetchone()
+    ).fetchone()
 
-    cur.close()
     conn.close()
 
     return render_template(
@@ -480,14 +448,12 @@ def delete_announcement(id):
 
     conn = get_db()
 
-    cur = conn.cursor()
-    cur.execute(
+    conn.execute(
         "DELETE FROM announcements WHERE id=%s",
         (id,),
     )
 
     conn.commit()
-    cur.close()
     conn.close()
 
     return redirect(url_for("manage_announcements"))
@@ -510,13 +476,12 @@ def donation():
         donation_date = datetime.now().strftime("%d-%m-%Y %I:%M %p")
 
         conn = get_db()
-        cur = conn.cursor()
 
-        cur.execute(
+        conn.execute(
             """
             INSERT INTO donations
             (name,mobile,amount,payment_mode,transaction_id,donation_date)
-            VALUES(%s,%s,%s,%s,%s,%s)
+            VALUES(?,?,?,?,?,?)
             """,
             (
                 name,
@@ -529,7 +494,6 @@ def donation():
         )
 
         conn.commit()
-        cur.close()
         conn.close()
 
         return redirect(url_for("donation"))
@@ -542,11 +506,10 @@ def donation_admin():
 
     conn = get_db()
 
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM donations ORDER BY id DESC")
-    donations = cur.fetchall()
+    donations = conn.execute(
+        "SELECT * FROM donations ORDER BY id DESC"
+    ).fetchall()
 
-    cur.close()
     conn.close()
 
     return render_template(
@@ -560,14 +523,12 @@ def delete_donation(id):
 
     conn = get_db()
 
-    cur = conn.cursor()
-    cur.execute(
+    conn.execute(
         "DELETE FROM donations WHERE id=%s",
         (id,),
     )
 
     conn.commit()
-    cur.close()
     conn.close()
 
     return redirect(url_for("donation_admin"))
@@ -587,9 +548,8 @@ def tshirt():
         address = request.form["address"]
 
         conn = get_db()
-        cur = conn.cursor()
 
-        cur.execute(
+        conn.execute(
             """
             INSERT INTO tshirt_registration
             (name,mobile,tshirt_size,quantity,address)
@@ -605,7 +565,6 @@ def tshirt():
         )
 
         conn.commit()
-        cur.close()
         conn.close()
 
         return redirect(url_for("tshirt"))
@@ -618,16 +577,13 @@ def tshirt_admin():
 
     conn = get_db()
 
-    cur = conn.cursor()
-    cur.execute(
+    registrations = conn.execute(
         """
         SELECT * FROM tshirt_registration
         ORDER BY id DESC
         """
-    )
-    registrations = cur.fetchall()
+    ).fetchall()
 
-    cur.close()
     conn.close()
 
     return render_template(
@@ -641,14 +597,12 @@ def delete_tshirt(id):
 
     conn = get_db()
 
-    cur = conn.cursor()
-    cur.execute(
+    conn.execute(
         "DELETE FROM tshirt_registration WHERE id=%s",
         (id,),
     )
 
     conn.commit()
-    cur.close()
     conn.close()
 
     return redirect(url_for("tshirt_admin"))
@@ -725,24 +679,27 @@ def delete_media(filename):
 def dashboard():
 
     conn = get_db()
-    cur = conn.cursor()
 
-    cur.execute("SELECT COUNT(*) AS c FROM events")
-    total_events = cur.fetchone()["c"]
+    total_events = conn.execute(
+        "SELECT COUNT(*) FROM events"
+    ).fetchone()[0]
 
-    cur.execute("SELECT COUNT(*) AS c FROM committee")
-    total_committee = cur.fetchone()["c"]
+    total_committee = conn.execute(
+        "SELECT COUNT(*) FROM committee"
+    ).fetchone()[0]
 
-    cur.execute("SELECT COUNT(*) AS c FROM announcements")
-    total_announcements = cur.fetchone()["c"]
+    total_announcements = conn.execute(
+        "SELECT COUNT(*) FROM announcements"
+    ).fetchone()[0]
 
-    cur.execute("SELECT COUNT(*) AS c FROM donations")
-    total_donations = cur.fetchone()["c"]
+    total_donations = conn.execute(
+        "SELECT COUNT(*) FROM donations"
+    ).fetchone()[0]
 
-    cur.execute("SELECT COUNT(*) AS c FROM tshirt_registration")
-    total_tshirts = cur.fetchone()["c"]
+    total_tshirts = conn.execute(
+        "SELECT COUNT(*) FROM tshirt_registration"
+    ).fetchone()[0]
 
-    cur.close()
     conn.close()
 
     return render_template(
@@ -760,5 +717,4 @@ def logout():
     return redirect(url_for("home"))
 
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True, port=5001)

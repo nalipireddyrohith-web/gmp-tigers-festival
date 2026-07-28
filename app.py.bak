@@ -4,6 +4,16 @@ import sqlite3
 import os
 
 app = Flask(__name__)
+
+@app.before_request
+def debug_request():
+    print("=" * 60)
+    print("METHOD:", request.method)
+    print("PATH:", request.path)
+    print("FORM KEYS:", list(request.form.keys()))
+    print("FILE KEYS:", list(request.files.keys()))
+    print("=" * 60)
+
 print("=== RUNNING:", __file__)
 
 import os
@@ -19,7 +29,9 @@ os.makedirs(app.config["COMMITTEE_FOLDER"], exist_ok=True)
 
 DATABASE = "festival.db"
 
-GALLERY_FOLDER = "static/uploads"
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+GALLERY_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
 os.makedirs(GALLERY_FOLDER, exist_ok=True)
 
 COMMITTEE_FOLDER = "static/committee_photos"
@@ -142,7 +154,7 @@ def login():
     username = request.form.get("username")
     password = request.form.get("password")
 
-    if username == "admin" and password == "gmp123":
+    if username == "rohith" and password == "Rohith@2026":
         return redirect(url_for("dashboard"))
 
     return "<h2>Invalid Username or Password</h2>"
@@ -164,6 +176,16 @@ def manage_events():
 def add_event():
 
     if request.method == "POST":
+
+        receipt = request.files.get("receipt")
+
+        if receipt and receipt.filename:
+            receipt.save(
+                os.path.join(
+                    "static/donation_receipts",
+                    receipt.filename
+                )
+            )
         event = request.form["event"]
         date = request.form["date"]
         time = request.form["time"]
@@ -475,5 +497,304 @@ def delete_announcement(id):
 
     return redirect(url_for("manage_announcements"))
 
+# ---------------- DONATIONS ----------------
+
+@app.route("/donation", methods=["GET", "POST"])
+def donation():
+
+    if request.method == "POST":
+
+        receipt = request.files.get("receipt")
+        receipt_name = ""
+
+        if receipt and receipt.filename:
+            from werkzeug.utils import secure_filename
+            receipt_name = secure_filename(receipt.filename)
+            receipt.save(os.path.join("static/donation_receipts", receipt_name))
+
+        conn = get_db()
+
+        conn.execute(
+            """
+            INSERT INTO donations
+            (name,mobile,amount,payment_mode,transaction_id,donation_date,receipt)
+            VALUES(?,?,?,?,?,datetime('now'),?)
+            """,
+            (
+                request.form["name"],
+                request.form["mobile"],
+                request.form["amount"],
+                request.form.get("payment_mode","UPI"),
+                request.form.get("transaction_id",""),
+                receipt_name,
+            ),
+        )
+
+        conn.commit()
+        conn.close()
+
+        return render_template("donation_success.html")
+
+    return render_template("donation.html")
+
+
+@app.route("/donation_admin")
+def donation_admin():
+
+    conn = get_db()
+
+    donations = conn.execute(
+        "SELECT * FROM donations ORDER BY id DESC"
+    ).fetchall()
+
+    total_amount = conn.execute(
+        "SELECT COALESCE(SUM(amount),0) FROM donations"
+    ).fetchone()[0]
+
+    conn.close()
+
+    return render_template("donation_admin.html", donations=donations, total_amount=total_amount)
+
+
+@app.route("/delete_donation/<int:id>")
+def delete_donation(id):
+
+    conn = get_db()
+    conn.execute("DELETE FROM donations WHERE id=?", (id,))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("donation_admin"))
+
+
+# ---------------- TSHIRT ----------------
+
+@app.route("/tshirt", methods=["GET","POST"])
+def tshirt():
+
+    if request.method == "POST":
+
+        from werkzeug.utils import secure_filename
+        import os
+
+        screenshot = request.files.get("screenshot")
+        screenshot_name = ""
+
+        if screenshot and screenshot.filename:
+            screenshot_name = secure_filename(screenshot.filename)
+            screenshot.save(
+                os.path.join(app.config["UPLOAD_FOLDER"], screenshot_name)
+            )
+
+        conn = get_db()
+
+        conn.execute(
+            "INSERT INTO tshirt_registration(name,mobile,tshirt_size,quantity,address) VALUES(?,?,?,?,?)",
+            (
+                request.form["name"],
+                request.form["mobile"],
+                request.form["tshirt_size"],
+                request.form["quantity"],
+                request.form.get("address", ""),
+            ),
+        )
+
+        conn.commit()
+        conn.close()
+
+        return render_template("tshirt_success.html")
+
+    return render_template("tshirt.html")
+
+
+@app.route("/tshirt_admin")
+def tshirt_admin():
+
+    conn = get_db()
+
+    registrations = conn.execute(
+        "SELECT * FROM tshirt_registration ORDER BY id DESC"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template("tshirt_admin.html", registrations=registrations)
+
+
+@app.route("/delete_tshirt/<int:id>")
+def delete_tshirt(id):
+
+    conn = get_db()
+    conn.execute("DELETE FROM tshirt_registration WHERE id=?", (id,))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("tshirt_admin"))
+
+
+
+
+# ---------------- GALLERY MANAGEMENT ----------------
+
+@app.route("/manage_gallery")
+def manage_gallery():
+
+    folder = app.config["UPLOAD_FOLDER"]
+
+    files = []
+
+    if os.path.exists(folder):
+        files = sorted(os.listdir(folder), reverse=True)
+
+    return render_template(
+        "manage_gallery.html",
+        gallery_files=files
+    )
+
+
+@app.route("/upload_gallery", methods=["POST"])
+def upload_gallery():
+
+    print("FORM:", request.form)
+    print("FILES:", list(request.files.keys()))
+
+    if "file" not in request.files:
+        return "No file field received", 400
+
+    files = request.files.getlist("file")
+
+    print("TOTAL FILES:", len(files))
+
+    for file in files:
+        if file and file.filename:
+            filename = secure_filename(file.filename)
+            file.save(
+                os.path.join(
+                    app.config["UPLOAD_FOLDER"],
+                    filename
+                )
+            )
+
+    return redirect(url_for("manage_gallery"))
+
+
+@app.route("/delete_gallery/<filename>")
+def delete_gallery(filename):
+
+    path = os.path.join(
+        app.config["UPLOAD_FOLDER"],
+        filename
+    )
+
+    if os.path.exists(path):
+        os.remove(path)
+
+    return redirect(url_for("manage_gallery"))
+
+
+
+
+@app.route("/upload_image", methods=["POST"])
+def upload_image():
+
+    file = request.files.get("file")
+
+    if file and file.filename:
+        filename = secure_filename(file.filename)
+
+        file.save(
+            os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                filename
+            )
+        )
+
+    return redirect(url_for("manage_gallery"))
+
+
+
+
+
+# -------- RESTORE OLD ADMIN ACTION ROUTES --------
+
+
+@app.route("/save_committee", methods=["POST"])
+def save_committee():
+
+    name = request.form["name"]
+    designation = request.form["designation"]
+    mobile = request.form["mobile"]
+
+    photo = request.files.get("photo")
+    filename = ""
+
+    if photo and photo.filename:
+        filename = secure_filename(photo.filename)
+        photo.save(
+            os.path.join(
+                app.config["COMMITTEE_FOLDER"],
+                filename
+            )
+        )
+
+    conn = get_db()
+
+    conn.execute(
+        """
+        INSERT INTO committee(name,designation,mobile,photo)
+        VALUES(?,?,?,?)
+        """,
+        (name, designation, mobile, filename)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("manage_committee"))
+
+
+
+@app.route("/save_event", methods=["POST"])
+def save_event():
+
+    event = request.form["event"]
+    date = request.form["date"]
+    time = request.form["time"]
+
+    conn = get_db()
+
+    conn.execute(
+        """
+        INSERT INTO events(event,date,time)
+        VALUES(?,?,?)
+        """,
+        (event, date, time)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("manage_events"))
+
+
+
+@app.route("/upload", methods=["POST"])
+def upload():
+
+    file = request.files.get("file")
+
+    if file and file.filename:
+        filename = secure_filename(file.filename)
+
+        file.save(
+            os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                filename
+            )
+        )
+
+    return redirect(url_for("manage_gallery"))
+
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(host="0.0.0.0", port=5001, debug=True)

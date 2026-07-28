@@ -5,6 +5,10 @@ import os
 
 app = Flask(__name__)
 
+with app.app_context():
+    init_db()
+
+
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
     "postgresql://postgres:postgres@localhost:5432/gmp_tigers"

@@ -406,6 +406,10 @@ def announcements():
         "SELECT * FROM announcements ORDER BY id DESC"
     )
     announcements = cur.fetchall()
+    print("ANNOUNCEMENTS:", announcements)
+    if announcements:
+        print("FIRST:", announcements[0])
+        print("TYPE:", type(announcements[0]))
     cur.close()
     conn.close()
 

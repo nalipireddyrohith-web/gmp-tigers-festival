@@ -91,11 +91,11 @@ margin:20px auto;max-width:500px;text-align:center;">
 
 <tr>
 
-<td>{{ d[0] }}</td>
-<td>{{ d[1] }}</td>
-<td>{{ d[2] }}</td>
-<td>₹ {{ d[3] }}</td>
-<td>{{ d[4] }}</td>
+<td>{{ d['id'] }}</td>
+<td>{{ d['name'] }}</td>
+<td>{{ d['mobile'] }}</td>
+<td>₹ {{ d['amount'] }}</td>
+<td>{{ d['payment_mode'] }}</td>
 <td>
 {% if d[7] %}
 <a href="/static/donation_receipts/{{ d[7] }}" target="_blank">View</a>
@@ -106,7 +106,7 @@ No Receipt
 
 
 <td>
-<a href="/delete_donation/{{ d[0] }}">Delete</a>
+<a href="/delete_donation/{{ d['id'] }}">Delete</a>
 </td>
 
 </tr>

@@ -8,9 +8,9 @@
 
 {% for a in announcements %}
 <div style="max-width:800px;margin:20px auto;padding:20px;background:white;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.15);">
-    <h2>{{ a[1] }}</h2>
-    <p>{{ a[2] }}</p>
-    <small>{{ a[3] }}</small>
+    <h2>{{ a['title'] }}</h2>
+    <p>{{ a['message'] }}</p>
+    <small>{{ a['date'] }}</small>
 </div>
 {% else %}
 <h3 style="text-align:center;">No announcements available.</h3>

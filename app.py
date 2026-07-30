@@ -5,9 +5,6 @@ import os
 
 app = Flask(__name__)
 
-with app.app_context():
-    init_db()
-
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
@@ -88,6 +85,11 @@ def init_db():
     conn.commit()
     cur.close()
     conn.close()
+
+
+with app.app_context():
+    init_db()
+
 
 
 # ---------------- HOME ----------------

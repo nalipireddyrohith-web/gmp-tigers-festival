@@ -106,13 +106,13 @@ Add Announcement
 
 <tr>
 
-<td>{{ a[0] }}</td>
-<td>{{ a[1] }}</td>
-<td>{{ a[2] }}</td>
-<td>{{ a[3] }}</td>
+<td>{{ a['id'] }}</td>
+<td>{{ a['title'] }}</td>
+<td>{{ a['message'] }}</td>
+<td>{{ a['date'] }}</td>
 
 <td>
-<a href="/delete_announcement/{{ a[0] }}">
+<a href="/delete_announcement/{{ a['id'] }}">
 Delete
 </a>
 </td>

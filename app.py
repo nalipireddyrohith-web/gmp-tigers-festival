@@ -178,8 +178,7 @@ def add_event():
 
     if request.method == "POST":
         event = request.form["event"]
-        date = request.form["date"]
-        time = request.form["time"]
+            time = request.form["time"]
 
         conn = get_db()
         cur = conn.cursor()
@@ -203,8 +202,7 @@ def edit_event(id):
 
     if request.method == "POST":
         event = request.form["event"]
-        date = request.form["date"]
-        time = request.form["time"]
+            time = request.form["time"]
 
         cur = conn.cursor()
         cur.execute(
@@ -439,7 +437,6 @@ def add_announcement():
 
     title = request.form["title"]
     message = request.form["message"]
-    date = request.form["date"]
 
 
     conn = get_db()
@@ -469,7 +466,6 @@ def edit_announcement(id):
 
         title = request.form["title"]
         message = request.form["message"]
-    date = request.form["date"]
 
         cur = conn.cursor()
         cur.execute(

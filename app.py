@@ -439,6 +439,7 @@ def add_announcement():
 
     title = request.form["title"]
     message = request.form["message"]
+    date = request.form["date"]
 
     from datetime import datetime
     created_at = datetime.now().strftime("%d-%m-%Y %I:%M %p")
@@ -448,8 +449,7 @@ def add_announcement():
 
     cur.execute(
         """
-        INSERT INTO announcements
-        (title,message,created_at)
+        INSERT INTO announcements(title, message, date)
         VALUES(%s,%s,%s)
         """,
         (title, message, created_at),
@@ -471,6 +471,7 @@ def edit_announcement(id):
 
         title = request.form["title"]
         message = request.form["message"]
+    date = request.form["date"]
 
         cur = conn.cursor()
         cur.execute(

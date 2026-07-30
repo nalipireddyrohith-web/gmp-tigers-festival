@@ -50,13 +50,13 @@
 
 {% for row in registrations %}
 <tr>
-    <td>{{ row[0] }}</td>
-    <td>{{ row[1] }}</td>
-    <td>{{ row[2] }}</td>
-    <td>{{ row[3] }}</td>
-    <td>{{ row[4] }}</td>
-    <td>{{ row[5] }}</td>
-    <td><a href="/delete_tshirt/{{ row[0] }}">Delete</a></td>
+    <td>{{ row['id'] }}</td>
+    <td>{{ row['name'] }}</td>
+    <td>{{ row['mobile'] }}</td>
+    <td>{{ row['tshirt_size'] }}</td>
+    <td>{{ row['quantity'] }}</td>
+    <td>{{ row['address'] }}</td>
+    <td><a href="/delete_tshirt/{{ row['id'] }}">Delete</a></td>
 </tr>
 {% endfor %}
 

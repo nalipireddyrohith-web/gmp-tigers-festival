@@ -602,6 +602,10 @@ def delete_donation(id):
 
 @app.route("/tshirt", methods=["GET", "POST"])
 def tshirt():
+    print("===== TSHIRT REQUEST =====")
+    print("METHOD:", request.method)
+    print("FORM:", dict(request.form))
+
 
     success = False
     exists = False

@@ -603,6 +603,9 @@ def delete_donation(id):
 @app.route("/tshirt", methods=["GET", "POST"])
 def tshirt():
 
+    success = False
+    exists = False
+
     if request.method == "POST":
 
         name = request.form["name"]
@@ -615,27 +618,38 @@ def tshirt():
         cur = conn.cursor()
 
         cur.execute(
-            """
-            INSERT INTO tshirt_registration
-            (name,mobile,tshirt_size,quantity,address)
-            VALUES(%s,%s,%s,%s,%s)
-            """,
-            (
-                name,
-                mobile,
-                tshirt_size,
-                quantity,
-                address,
-            ),
+            "SELECT id FROM tshirt_registration WHERE mobile=%s",
+            (mobile,)
         )
 
-        conn.commit()
+        if cur.fetchone():
+            exists = True
+        else:
+            cur.execute(
+                """
+                INSERT INTO tshirt_registration
+                (name,mobile,tshirt_size,quantity,address)
+                VALUES(%s,%s,%s,%s,%s)
+                """,
+                (
+                    name,
+                    mobile,
+                    tshirt_size,
+                    quantity,
+                    address,
+                ),
+            )
+            conn.commit()
+            success = True
+
         cur.close()
         conn.close()
 
-        return redirect(url_for("tshirt"))
-
-    return render_template("tshirt.html")
+    return render_template(
+        "tshirt.html",
+        success=success,
+        exists=exists
+    )
 
 
 @app.route("/tshirt_admin")

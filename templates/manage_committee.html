@@ -118,35 +118,35 @@ required>
 {% for m in members %}
 
 <tr>
-<td>{{ m[0] }}</td>
+<td>{{ m["id"] }}</td>
 
 <td>
-{% if m[4] %}
-<img src="{{ url_for('static', filename='committee_photos/' + m[4]) }}" width="80" height="80" style="border-radius:50%;">
+{% if m["photo"] %}
+<img src="{{ url_for('static', filename='committee_photos/' + m["photo"]) }}" width="80" height="80" style="border-radius:50%;">
 {% else %}
 No Photo
 {% endif %}
 </td>
 
-<td>{{ m[1] }}</td>
+<td>{{ m["name"] }}</td>
 
-<td>{{ m[2] }}</td>
-<td>{{ m[3] }}</td>
+<td>{{ m["designation"] }}</td>
+<td>{{ m["mobile"] }}</td>
 
 <td>
-<a href="/edit_committee/{{ m[0] }}" style="color:green;text-decoration:none;font-weight:bold;">
+<a href="/edit_committee/{{ m["id"] }}" style="color:green;text-decoration:none;font-weight:bold;">
 Edit
 </a>
 </td>
 
 <td>
-<a href="/change_committee_photo/{{ m[0] }}" style="color:blue;text-decoration:none;font-weight:bold;">
+<a href="/change_committee_photo/{{ m["id"] }}" style="color:blue;text-decoration:none;font-weight:bold;">
 📷 Change Photo
 </a>
 </td>
 
 <td>
-<a href="/delete_committee/{{ m[0] }}" style="color:red;text-decoration:none;font-weight:bold;">
+<a href="/delete_committee/{{ m["id"] }}" style="color:red;text-decoration:none;font-weight:bold;">
 🗑️ Delete
 </a>
 </td>

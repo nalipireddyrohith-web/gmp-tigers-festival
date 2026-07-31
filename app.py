@@ -116,7 +116,18 @@ def contact():
 
 @app.route("/gallery")
 def gallery():
-    return render_template("gallery.html")
+
+    folder = app.config["UPLOAD_FOLDER"]
+
+    files = []
+
+    if os.path.exists(folder):
+        files = sorted(os.listdir(folder), reverse=True)
+
+    return render_template(
+        "gallery.html",
+        files=files
+    )
 
 
 @app.route("/events")

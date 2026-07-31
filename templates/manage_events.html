@@ -112,20 +112,20 @@ border-radius:5px;
 
 <tr>
 
-<td>{{ event[0] }}</td>
-<td>{{ event[1] }}</td>
-<td>{{ event[2] }}</td>
-<td>{{ event[3] }}</td>
+<td>{{ event['id'] }}</td>
+<td>{{ event['event'] }}</td>
+<td>{{ event['date'] }}</td>
+<td>{{ event['time'] }}</td>
 
 <td>
-<a class="edit" href="/edit_event/{{ event[0] }}">
+<a class="edit" href="/edit_event/{{ event['id'] }}">
 ✏️ Edit
 </a>
 </td>
 
 <td>
 <a class="delete"
-href="/delete_event/{{ event[0] }}"
+href="/delete_event/{{ event['id'] }}"
 onclick="return confirm('Delete this event?')">
 🗑 Delete
 </a>

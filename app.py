@@ -704,6 +704,13 @@ def delete_tshirt(id):
 
 from werkzeug.utils import secure_filename
 
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp", "mp4", "mov", "avi", "mkv"}
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+
 @app.route("/upload")
 def upload():
     return render_template("upload.html")

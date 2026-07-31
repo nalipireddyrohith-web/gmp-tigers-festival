@@ -712,7 +712,7 @@ def upload():
 @app.route("/upload_image", methods=["POST"])
 def upload_image():
 
-    files = request.files.getlist("photos")
+    files = request.files.getlist("file")
     uploaded = 0
 
     for file in files:

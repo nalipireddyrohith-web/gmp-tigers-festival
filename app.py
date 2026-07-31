@@ -178,7 +178,8 @@ def add_event():
 
     if request.method == "POST":
         event = request.form["event"]
-            time = request.form["time"]
+        date = request.form["date"]
+        time = request.form["time"]
 
         conn = get_db()
         cur = conn.cursor()
@@ -202,7 +203,8 @@ def edit_event(id):
 
     if request.method == "POST":
         event = request.form["event"]
-            time = request.form["time"]
+        date = request.form["date"]
+        time = request.form["time"]
 
         cur = conn.cursor()
         cur.execute(

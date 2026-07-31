@@ -46,11 +46,11 @@ button{
 
 <h2>📷 Change Committee Member Photo</h2>
 
-{% if member[4] %}
-<img src="{{ url_for('static', filename='committee_photos/' + member[4]) }}">
+{% if member["photo"] %}
+<img src="{{ url_for('static', filename='committee_photos/' + member["photo"]) }}">
 {% endif %}
 
-<form action="{{ url_for('change_committee_photo', id=member[0]) }}" method="POST" enctype="multipart/form-data">
+<form action="{{ url_for('change_committee_photo', id=member["id"]) }}" method="POST" enctype="multipart/form-data">
 
 <input type="file" name="photo" accept="image/*" required>
 

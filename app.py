@@ -373,7 +373,7 @@ def change_committee_photo(id):
 
             filename = photo.filename
             photo.save(
-                os.path.join(app.config["UPLOAD_FOLDER"], filename)
+                os.path.join(app.config["COMMITTEE_FOLDER"], filename)
             )
 
             cur = conn.cursor()

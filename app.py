@@ -126,7 +126,7 @@ def gallery():
 
     return render_template(
         "gallery.html",
-        files=files
+        gallery_files=files
     )
 
 

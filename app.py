@@ -17,6 +17,10 @@ UPLOAD_FOLDER = "static/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+COMMITTEE_FOLDER = "static/committee_photos"
+os.makedirs(COMMITTEE_FOLDER, exist_ok=True)
+app.config["COMMITTEE_FOLDER"] = COMMITTEE_FOLDER
+
 
 def get_db():
     return psycopg.connect(
